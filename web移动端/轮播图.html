@@ -131,7 +131,6 @@
             startX = 0;
             moveX = 0;
             endX = 0;
-            setTiem();
         });
         firstUl.addEventListener("transitionend", function () {
             setTimeout(function () {
@@ -145,9 +144,9 @@
                     firstUl.style.transition = "none";
                     firstUl.style.left = -index * li.offsetWidth + "px";
                 }
-                str = true;
                 dian(index);
             }, 500);
+                str = true;
             // 开启定时器
             clearInterval(tiemId);
             setTiem();
