@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div class="box">
+        <ul>
+            <li><a href="djavascript:;"><img src="img/l1.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l2.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l3.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l4.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l5.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l6.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l7.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l8.jpg" alt=""></a></li>
+        </ul>
+        <ul>
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script>
+        var box = document.querySelector(".box");
+        var uls = box.querySelectorAll("ul");
+        var ul1 = uls[0];
+        var lastLi = ul1.querySelector("li:last-of-type");
+        var firstLi = ul1.querySelector("li:first-of-type");
+        ul1.insertBefore(lastLi.cloneNode(true), firstLi);
+        ul1.appendChild(firstLi.cloneNode(true));
+        var lis = ul1.querySelectorAll("li");
+        for (var i = 0; i < lis.length; i++) {
+            var li = lis[i];
+        }
+        // 设置ul的宽度
+        ul1.style.width = " " + (lis.length * li.offsetWidth) + "px";
+        var index = 1;
+        ul1.style.left = -index * li.offsetWidth + "px";
+        // 开启定时器
+        var tiemId;
+        var stetiem = function () {
+            tiemId = setInterval(function () {
+                index++;
+                ul1.style.transition = "all 0.5s";
+                ul1.style.left = -index * li.offsetWidth + "px";
+                setTimeout(function () {
+                    if (index == lis.length - 1) {
+                        index = 1;
+                        ul1.style.transition = "none";
+                        ul1.style.left = -index * li.offsetWidth + "px";
+                    }
+                    Dian(index);
+                }, 500);
+            }, 1000);
+        }
+        stetiem();
+
+        // 实现手动滑动
+        var startX, moveX, endX;
+        ul1.addEventListener("touchstart", function (e) {
+            // 关闭定时器
+            clearInterval(tiemId);
+            ul1.style.transition = "none";
+            startX = e.targetTouches[0].clientX;
+            console.log(startX);
+        });
+        ul1.addEventListener("touchmove", function (e) {
+            moveX = e.targetTouches[0].clientX;
+            // 计算差值
+            endX = moveX - startX;
+
+            ul1.style.left = -index * li.offsetWidth + endX + "px";
+        });
+        ul1.addEventListener("touchend", function () {
+            if (Math.abs(endX) > 100) {
+                if (endX > 0) {
+                    index--;
+                } else {
+                    index++;
+                }
+                ul1.style.transition = "all 0.5s";
+                ul1.style.left = -index * li.offsetWidth + "px";
+            } else if (Math.abs(endX) > 0) {
+                ul1.style.transition = "all 0.5s";
+                ul1.style.left = -index * li.offsetWidth + "px";
+            }
+            stetiem();
+            Dian(index);
+        });
+
+        // 实现点标记
+        var Dian = function (index) {
+            var li2 = uls[1];
+            var dians = li2.querySelectorAll("li");
+            for (var j = 0; j < dians.length; j++) {
+                var dian = dians[j];
+                dian.classList.remove("active");
+            }
+            dians[index - 1].classList.add("active");
+        }
+    </script>
+</body>
+
+</html>

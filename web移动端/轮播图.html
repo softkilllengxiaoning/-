@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        /* box{
+        transition
+    } */
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <ul>
+            <li><a href="djavascript:;"><img src="img/l1.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l2.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l3.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l4.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l5.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l6.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l7.jpg" alt=""></a></li>
+            <li><a href="djavascript:;"><img src="img/l8.jpg" alt=""></a></li>
+        </ul>
+        <ul>
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script>
+        // 获取元素
+        var box = document.querySelector(".box");
+        // 获取第一个ul
+        var firstUl = box.querySelector("ul:first-of-type");
+        // 获取最后一个ul
+        var lastUl = box.querySelector("ul:last-of-type");
+        // 分别给ul中最前面和最后面添加图片
+        var firstLi = firstUl.querySelector("li:first-of-type");
+        var lastLi = firstUl.querySelector("li:last-of-type");
+        // 克隆并添加到首尾
+        firstUl.appendChild(firstLi.cloneNode(true));
+        firstUl.insertBefore(lastLi.cloneNode(true), firstUl.firstChild);
+        // 获取第一个ul中的所有li,必须在添加完照片后再获取li的数量
+        var lis = firstUl.querySelectorAll("li");
+        // 重新设置父容器的宽度
+        for (var i = 0; i < lis.length; i++) {
+            var li = lis[i];
+        }
+        firstUl.style.width = (lis.length * li.offsetWidth) + "px";
+        // 设置默认偏移值
+        var index = 1;
+        firstUl.style.left = -index * li.offsetWidth + "px";
+        // 开启定时器实现自动轮播
+        var tiemId;
+        var setTiem = function () {
+            tiemId = setInterval(function () {
+                index++;
+                // 开启过渡
+                firstUl.style.transition = "all 0.5s";
+                firstUl.style.left = -index * li.offsetWidth + "px";
+                // 创建延时器
+                setTimeout(function () {
+                    if (index == lis.length - 1) {
+                        index = 1;
+                        // 偏移到指定位置
+                        firstUl.style.transition = "none";
+                        firstUl.style.left = -index * li.offsetWidth + "px";
+                    }
+                    dian(index);
+                }, 500);
+            }, 1000);
+        }
+        setTiem();
+
+        // 实现点标记
+        var dian = function (index) {
+            // 获取元素
+            var dianLis = lastUl.querySelectorAll("li");
+            // 先删除所有的默认样式
+            for (var i = 0; i < dianLis.length; i++) {
+                dianLis[i].classList.remove("active");
+            }
+            dianLis[index - 1].classList.add("active");
+        }
+
+        // 设置节流阀防止用户滑动过快导致出错
+        var str = true;
+        // 实现移动端滑动事件
+        var startX, moveX, endX;
+        firstUl.addEventListener("touchstart", function (e) {
+            // 关闭定时器
+            clearInterval(tiemId);
+            firstUl.style.transition = "none";
+            // 记录点击时的手指坐标
+            startX = e.targetTouches[0].clientX;
+        });
+        firstUl.addEventListener("touchmove", function (e) {
+            if (str) {
+                moveX = e.targetTouches[0].clientX;
+                // 计算差值
+                endX = moveX - startX;
+                // 设置偏移值
+                firstUl.style.left = endX + -index * li.offsetWidth + "px";
+            }
+        });
+        firstUl.addEventListener("touchend", function (e) {
+            str = false;
+            if (Math.abs(endX) > 100) {
+                if (endX > 0) {
+                    // 如果大于0 就是上一张
+                    index--;
+                } else {
+                    index++;
+                }
+                firstUl.style.transition = "all 0.5s";
+                firstUl.style.left = -index * li.offsetWidth + "px";
+            } else if (Math.abs(endX) > 0) {
+                firstUl.style.transition = "all 0.5s";
+                firstUl.style.left = -index * li.offsetWidth + "px";
+            }
+            startX = 0;
+            moveX = 0;
+            endX = 0;
+            setTiem();
+        });
+        firstUl.addEventListener("transitionend", function () {
+            setTimeout(function () {
+                if (index == lis.length - 1) {
+                    index = 1;
+                    // 偏移到指定位置
+                    firstUl.style.transition = "none";
+                    firstUl.style.left = -index * li.offsetWidth + "px";
+                } else if (index == 0) {
+                    index = lis.length - 2;
+                    firstUl.style.transition = "none";
+                    firstUl.style.left = -index * li.offsetWidth + "px";
+                }
+                str = true;
+                dian(index);
+            }, 500);
+            // 开启定时器
+            clearInterval(tiemId);
+            setTiem();
+            // 开启点标记函数
+            // dian(index);
+        });
+    </script>
+</body>
+
+</html>

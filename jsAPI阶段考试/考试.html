@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>考试</title>
+    <style>
+        th{
+        border: 1px solid #ccc;
+        padding: 10px;
+        background-color: pink;
+    }
+    td{
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+    .y{
+        background-color: yellow;
+    }
+    .r{
+        background-color: red;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- 第一题 -->
+    <div>
+        <label class="lb" for="j_txtLesson">请输入姓名：</label>
+        <input class="txt" type="text" id="btn1">
+    </div>
+    <div>
+        <label class="lb" for="j_txtLesson">请输入邮箱：</label>
+        <input class="txt" type="text" id="btn2">
+    </div>
+    <div>
+        <label class="lb" for="j_txtLesson">请输入手机：</label>
+        <input class="txt" type="text" id="btn3">
+    </div>
+    <div>
+        <label class="lb" for="j_txtLesson">请输入地址：</label>
+        <input class="txt" type="text" id="btn4">
+    </div>
+    <button id="btn">添加</button> <br>
+    <table>
+        <thead id="thead">
+            <tr>
+                <th>姓名</th>
+                <th>邮箱</th>
+                <th>手机</th>
+                <th>地址</th>
+            </tr>
+
+        </thead>
+        <tbody id="tbody">
+            <tr>
+                <td>小黑</td>
+                <td>1263168279@hjihd.com</td>
+                <td>23461789</td>
+                <td>安居客的和</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        //点击添加的时候传递数据
+        var btn = document.getElementById('btn');
+        var tbody = document.getElementById('tbody');
+        var str = 0;
+        btn.onclick = function () {
+            //判断三个表单是否有值
+            if (btn1.value != '' && btn2.value != '' && btn3.value != '' && btn4.value != '') {
+                str++;
+                //将表单值放入数组中
+                //第一个表单之
+                var Name = btn1.value;
+                var youxiang = btn2.value;
+                var shouji = btn3.value;
+                var dizhi = btn4.value;
+                var arr = [Name, youxiang, shouji, dizhi];
+                //创建tr
+                var tr = document.createElement('tr');
+
+                tbody.appendChild(tr);
+                if (str % 2 === 0) {
+                    tr.className = 'y';
+                } else {
+                    tr.className = 'r';
+                }
+                //创捷列
+                for (var i = 0; i < arr.length; i++) {
+                    var td = document.createElement('td');
+                    td.innerText = arr[i];
+                    tr.appendChild(td);
+                }
+            } else {
+                alert('请将数据填入完整');
+            }
+        }
+        //隔行变色
+        for (var i = 0; i < tbody.children.length; i++) {
+            var tr = tbody.children[i];
+            if (str % 2 === 0) {
+                tr.className = 'y';
+                break;
+            } else {
+                tr.className = 'r';
+            }
+        }
+    </script>
+</body>
+
+</html>
